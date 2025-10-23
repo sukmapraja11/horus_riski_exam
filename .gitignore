@@ -1,0 +1,15 @@
+# Laravel & PHP
+/backend/vendor
+/backend/node_modules
+/backend/storage
+/backend/.env
+
+# Vue & Node
+/frontend/node_modules
+/frontend/dist
+
+# OS / Editor
+.DS_Store
+Thumbs.db
+.vscode
+.idea
