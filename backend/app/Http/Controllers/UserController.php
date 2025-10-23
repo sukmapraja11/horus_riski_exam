@@ -28,7 +28,7 @@ class UserController extends Controller
         ]);
            return response()->json([
         'message' => 'Registrasi berhasil',
-        
+
     ], 201);
     }
 
@@ -88,29 +88,11 @@ class UserController extends Controller
     }
 
 
-
-    public function dashboard(Request $request)
-    {
-        //fitur pencarian
-        $search = $request->input('search');
-        $user = User::query()->when($search, function ($query, $search){
-            $query->where('username', 'like', "%{$search}%")->orWhere('nama', 'like', "%{$search}");
-        })->select('id', 'username', 'nama', 'email')->get();
-
-        return view('users.dashboard', compact('users', 'search'));
- 
-    }
-
     public function destroy($id){
     $user = User::find($id);
 
-    if (!$user) {
-
-    return redirect()->back()->with('error', 'User tidak ditemukan');
-    
-    }
-
     $user->delete();
-    return redirect()->back()->with('success', 'User berhasil dihapus'); 
+    return response()->json(['message'=>'User berhasil dihapus'], 200);
     }
+
 }
