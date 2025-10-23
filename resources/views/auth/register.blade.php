@@ -1,54 +1,6 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Registrasi Akun</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #eef1f5;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-        }
-        .register-container {
-            background: white;
-            padding: 30px;
-            border-radius: 12px;
-            width: 380px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-            text-align: center;
-        }
-        h2 {
-            margin-bottom: 20px;
-            color: #333;
-        }
-        input {
-            width: 100%;
-            padding: 10px;
-            margin-bottom: 15px;
-            border: 1px solid #ccc;
-            border-radius: 6px;
-        }
-        button {
-            padding: 10px 20px;
-            background-color: #28a745;
-            color: white;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-        }
-        .error {
-            color: red;
-            margin-bottom: 10px;
-        }
-        .success {
-            color: green;
-            margin-bottom: 10px;
-        }
-    </style>
+@extends('layouts.app')
+
+@section('content')
     <script>
         function validateForm() {
             const email = document.getElementById('email').value;
@@ -67,36 +19,54 @@
                 return false;
             }
 
+            if (/\s/.test(username)) {
+            alert("Username tidak boleh mengandung spasi!");
+            return false;
+    }
+
             return true;
         }
     </script>
-</head>
-<body>
+<div class="bg-light d-flex justify-content-center align-items-center vh-100">
 
-<div class="register-container">
-    <h2>REGISTRASI AKUN</h2>
+<div class="card shadow-sm p-4" style="width: 380px;">
+    <h2 class="text-center mb-4">REGISTRASI AKUN</h2>
 
+    <!-- Error message -->
     @if ($errors->any())
-        <div class="error">
-            @foreach ($errors->all() as $err)
-                <div>{{ $err }}</div>
-            @endforeach
+        <div class="alert alert-danger">
+            <ul class="mb-0">
+                @foreach ($errors->all() as $err)
+                    <li>{{ $err }}</li>
+                @endforeach
+            </ul>
         </div>
     @endif
 
     <form action="{{ route('register.post') }}" method="POST" onsubmit="return validateForm()">
         @csrf
-        <input type="text" name="nama" id="nama" placeholder="Nama Lengkap" value="{{ old('nama') }}">
-        <input type="email" name="email" id="email" placeholder="Email" value="{{ old('email') }}">
-        <input type="text" name="username" id="username" placeholder="Username" value="{{ old('username') }}">
-        <input type="password" name="password" id="password" placeholder="Password">
-        <button type="submit">Registrasi</button>
+        <div class="mb-3">
+            <input type="text" name="nama" id="nama" class="form-control" placeholder="Nama Lengkap" value="{{ old('nama') }}">
+        </div>
+        <div class="mb-3">
+            <input type="email" name="email" id="email" class="form-control" placeholder="Email" value="{{ old('email') }}">
+        </div>
+        <div class="mb-3">
+            <input type="text" name="username" id="username" class="form-control" placeholder="Username" value="{{ old('username') }}">
+        </div>
+        <div class="mb-3">
+            <input type="password" name="password" id="password" class="form-control" placeholder="Password">
+        </div>
+        <div class="d-grid">
+            <button type="submit" class="btn btn-success">Registrasi</button>
+        </div>
     </form>
 
-    <p style="margin-top: 10px;">
+    <p class="text-center mt-3 mb-0">
         Sudah punya akun? <a href="/login">Login di sini</a>
     </p>
 </div>
+</div>
 
-</body>
+</div>
 </html>

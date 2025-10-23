@@ -9,27 +9,30 @@ use App\Models\User;
 
 class AuthController extends Controller
 {
-    /**
-     * 🧩 Halaman Login
-     */
+
+     // Halaman Login
+
     public function showLoginForm()
     {
         return view('auth.login');
     }
 
-    /**
-     * 🧩 Proses Login
-     */
+
+     // Proses Login
+
     public function login(Request $request)
     {
         $request->validate([
-            'username' => 'required',
+            'username' =>  ['required', 'regex:/^\S+$/'], // tidak boleh ada spasi,
             'password' => 'required'
+        ],[
+           'username.regex' => 'Username tidak boleh mengandung spasi.'
         ]);
 
         $user = User::where('username', $request->username)->first();
 
         // Jika username tidak ditemukan atau password salah
+
         if (!$user || !Hash::check($request->password, $user->password)) {
             return back()->withErrors(['login_error' => 'Username atau password salah'])->withInput();
         }
@@ -38,12 +41,11 @@ class AuthController extends Controller
         Session::put('user_id', $user->id);
         Session::put('user_name', $user->nama);
 
-        return redirect()->route('dashboard')->with('success', 'Login berhasil!');
+        return redirect()->route('dashboard')->with('success', 'Selamat datang, ' . $user->nama . '!');
     }
 
-    /**
-     * 🧩 Halaman Dashboard (tampilkan semua user)
-     */
+    // Halaman Dashboard (tampilkan semua user)
+
     public function dashboard(Request $request)
     {
         // Pastikan user sudah login
@@ -60,7 +62,7 @@ class AuthController extends Controller
                       ->orWhere('nama', 'like', "%{$search}%");
             })
             ->select('id', 'username', 'nama', 'email')
-            ->get();
+            ->paginate(10);
 
         return view('users.dashboard', [
             'users' => $users,
@@ -69,23 +71,23 @@ class AuthController extends Controller
         ]);
     }
 
-    /**
-     * 🧩 Halaman Registrasi
-     */
-    public function showRegisterForm()
+    // Halaman Registrasi
+
+    public function showRegisterForm(Request $request)
     {
+
         return view('auth.register');
     }
 
-    /**
-     * 🧩 Proses Registrasi
-     */
+
+    //  Proses Registrasi
+
     public function register(Request $request)
     {
         $request->validate([
             'nama' => 'required|string|max:100',
             'email' => 'required|email|unique:users,email',
-            'username' => 'required|string|min:4|unique:users,username',
+            'username' => ['required', 'string', 'min:4', 'unique:users,username', 'regex:/^\S+$/'],
             'password' => 'required|string|min:6'
         ]);
 
@@ -111,10 +113,6 @@ class AuthController extends Controller
         return redirect()->back()->with('success', 'User berhasil dihapus');
     }
 
-
-
- 
-
 public function editUser($id)
 {
     // Pastikan user sudah login
@@ -133,7 +131,15 @@ public function updateUser(Request $request, $id)
     $request->validate([
         'nama' => 'string|max:100',
         'email' => 'email|unique:users,email,'.$id,
-        'username' => 'string|min:4|unique:users,username,'.$id,
+        'username' => [
+            'required',
+            'string',
+            'min:4',
+            'unique:users,username,' . $id, // unik kecuali user sendiri
+            'regex:/^\S+$/' // tidak boleh ada spasi
+        ],
+    ], [
+        'username.regex' => 'Username tidak boleh mengandung spasi.'
     ]);
 
     $user = User::findOrFail($id);
@@ -146,11 +152,8 @@ public function updateUser(Request $request, $id)
     return redirect()->route('dashboard')->with('success', 'Data pengguna berhasil diperbarui!');
 }
 
+    // Logout
 
-
-    /**
-     * Logout
-     */
     public function logout()
     {
         Session::flush();

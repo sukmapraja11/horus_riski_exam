@@ -1,66 +1,123 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# 🧩 HORUS-RISKI-EXAM
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+![PHP](https://img.shields.io/badge/PHP-8.x-blue?logo=php)
+![Laravel](https://img.shields.io/badge/Laravel-9.x-red?logo=laravel)
+![MySQL](https://img.shields.io/badge/MySQL-8.x-blue?logo=mysql)
+![Bootstrap](https://img.shields.io/badge/Bootstrap-5.3-purple?logo=bootstrap)
 
-## About Laravel
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+Proyek ini merupakan implementasi **CRUD User Management System** berbasis **Laravel 9**, menggunakan **MySQL** sebagai database dan **Blade + Bootstrap** sebagai frontend framework.  
+Aplikasi ini mendukung proses **registrasi, login, update, dan delete user**, serta menerapkan **autentikasi middleware** untuk mengamankan halaman dashboard.
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+---
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+## 🚀 1. Fitur Utama
 
-## Learning Laravel
+### 🔐 Autentikasi Pengguna
+- Registrasi akun baru melalui endpoint `/users/register`.
+- Login menggunakan username dan password.
+- Validasi dilakukan di sisi **client dan server**.
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+### 📋 CRUD User
+- Menampilkan semua data pengguna (tanpa password).
+- Update dan hapus data user.
+- Hanya pengguna yang **sudah login** yang bisa mengakses halaman dashboard.
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+### 🎨 Tampilan (Frontend)
+- Menggunakan **Laravel Blade** sebagai template engine.
+- Menggunakan **Bootstrap 5** untuk layout responsif dan tampilan modern.
+- Validasi form di sisi klien dengan JavaScript + Regex.
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 2000 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+## 🗄️2. Desain Database
 
-## Laravel Sponsors
+Nama Database: horus_riski_db
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
+## 📋 Tabel: users
+Kolom	            Tipe Data	            Keterangan
+id	                BIGINT  (AI)	        Primary Key
+username	        VARCHAR(50)	            Unik, Wajib diisi
+password	        VARCHAR(255)	        Disimpan dalam bentuk hash
+email	            VARCHAR(100)	        Unik, Wajib diisi
+nama	            VARCHAR(100)	        Wajib diisi
+created_at	        TIMESTAMP	            Default waktu saat ini
+updated_at	        TIMESTAMP	            Otomatis diperbarui Laravel
 
-### Premium Partners
+## 🔗3. Endpoint REST API
+Method	        Endpoint	        Deskripsi	
+POST	        /users/register	    Registrasi pengguna baru	
+POST	        /users/login	    Autentikasi pengguna	
+GET	            /users	            Mendapatkan semua data user	
+PUT	            /users/{id}	        Update data user berdasarkan ID	
+DELETE	        /users/{id}	        Hapus user berdasarkan ID
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[Many](https://www.many.co.uk)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- **[DevSquad](https://devsquad.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[OP.GG](https://op.gg)**
-- **[WebReinvent](https://webreinvent.com/?utm_source=laravel&utm_medium=github&utm_campaign=patreon-sponsors)**
-- **[Lendio](https://lendio.com)**
+## 💡4. Alur Aplikasi
 
-## Contributing
+1. Halaman Login
+- Pengguna memasukkan username & password.
+- Jika berhasil → diarahkan ke Dashboard.
+- Jika gagal → muncul pesan “Username atau password salah”.
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+2. Halaman Registrasi
+- Semua field wajib diisi.
+- Jika registrasi berhasil → notifikasi sukses → diarahkan ke Login.
+- Jika gagal → pesan error seperti “Username sudah digunakan”.
 
-## Code of Conduct
+3. Dashboard
+- Menampilkan semua pengguna.
+- Dapat melakukan Search, Update, dan Delete.
+- Hanya bisa diakses jika pengguna sudah login (middleware auth).
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+4. Halaman Update User
+- Data user terisi otomatis.
+- Pengguna dapat mengubah nama, username, atau email.
+- Setelah update → kembali ke Dashboard.
 
-## Security Vulnerabilities
+## ⚙️ 5. Cara Instalasi
+**🧰 Persyaratan**
+- PHP 8.x
+- Composer
+- MySQL 
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+**🔧 Langkah-Langkah Instalasi**
 
-## License
+1. Clone Repository
+- git clone https://github.com/username/horus-riski-exam.git
+- cd horus-riski-exam/backend
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+2. Install Dependensi Laravel
+- composer install
+- Salin File .env
+- cp .env.example .env
+
+Lalu sesuaikan konfigurasi database:
+- DB_DATABASE=horus_riski_db
+- DB_USERNAME=root
+- DB_PASSWORD=
+
+
+4. Generate Key & Migrasi Database
+- php artisan key:generate
+- php artisan migrate
+
+5. Jalankan Server
+- php artisan serve
+- Akses di: 👉 http://localhost:8000
+
+## 📦 6. Teknologi yang Digunakan
+Komponen	    Teknologi / Versi
+Backend	        PHP 8.x, Laravel 9.x
+Database	    MySQL
+Frontend	    Laravel Blade, Bootstrap 5
+Auth System	    Laravel Auth Middleware
+Security	    Laravel CSRF Protection
+
+## 👨‍💻 7. Developer
+- Nama: M. Riski Syafrullah
+- Project: HORUS User Management Exam
+- Framework: Laravel 9
+- Database: MySQL
+- Frontend: Bootstrap + Blade
+
+## 📜 Lisensi
+Proyek ini dibuat untuk keperluan ujian teknikal dan pembelajaran.
+Diperbolehkan untuk dikembangkan kembali dengan mencantumkan sumber.

@@ -1,82 +1,56 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Halaman Login</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #eef1f5;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-        }
-        .login-container {
-            background: white;
-            padding: 30px;
-            border-radius: 12px;
-            width: 360px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-            text-align: center;
-        }
-        h2 {
-            margin-bottom: 20px;
-            color: #333;
-        }
-        input {
-            width: 100%;
-            padding: 10px;
-            margin-bottom: 15px;
-            border: 1px solid #ccc;
-            border-radius: 6px;
-        }
-        button {
-            padding: 10px 20px;
-            margin: 5px;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-        }
-        .btn-login {
-            background-color: #007bff;
-            color: white;
-        }
-        .btn-register {
-            background-color: #28a745;
-            color: white;
-        }
-        .error {
-            color: red;
-            margin-bottom: 10px;
-        }
-    </style>
-</head>
-<body>
+@extends('layouts.app')
 
-<div class="login-container">
-    <h2>LOGIN</h2>
+@section('content')
+<div class="bg-light d-flex justify-content-center align-items-center vh-100">
 
+<div class="card p-4 shadow-sm" style="width: 360px;">
+    <h2 class="text-center mb-4">LOGIN</h2>
+
+    <!-- Error message -->
     @if ($errors->has('login_error'))
-        <div class="error">{{ $errors->first('login_error') }}</div>
+        <div class="alert alert-danger">{{ $errors->first('login_error') }}</div>
     @endif
 
+    <!-- Success message -->
     @if (session('success'))
-    <div style="color: green; margin-bottom: 10px;">{{ session('success') }}</div>
+        <div class="alert alert-success">{{ session('success') }}</div>
     @endif
 
-
-    <form action="{{ route('login.post') }}" method="POST">
+    <form action="{{ route('login.post') }}" method="POST" onsubmit="return validateLoginForm()">
         @csrf
-        <input type="text" name="username" placeholder="Username" value="{{ old('username') }}" required>
-        <input type="password" name="password" placeholder="Password" required>
-        <div>
-            <button type="submit" class="btn-login">Login</button>
-            <button type="button" class="btn-register" onclick="window.location.href='/register'">Registrasi</button>
+        <div class="mb-3">
+            <input type="text" name="username" id="username" class="form-control" placeholder="Username" value="{{ old('username') }}" required>
+        </div>
+        <div class="mb-3">
+            <input type="password" name="password" id="password" class="form-control" placeholder="Password" required>
+        </div>
+        <div class="d-flex justify-content-center gap-2">
+            <button type="submit" class="btn btn-primary">Login</button>
+            <button type="button" class="btn btn-success" onclick="window.location.href='{{ route('register') }}'">Registrasi</button>
         </div>
     </form>
 </div>
 
-</body>
+<script>
+function validateLoginForm() {
+    const username = document.getElementById('username').value.trim();
+    const password = document.getElementById('password').value.trim();
+
+    // Cek field wajib diisi
+    if (!username || !password) {
+        alert("Semua field wajib diisi!");
+        return false;
+    }
+
+    // Cek username tidak boleh ada spasi
+    if (/\s/.test(username)) {
+        alert("Username tidak boleh mengandung spasi!");
+        return false;
+    }
+
+    return true; // form valid
+}
+</script>
+</div>
+</div>
 </html>
